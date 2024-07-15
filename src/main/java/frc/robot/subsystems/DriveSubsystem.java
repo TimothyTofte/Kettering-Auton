@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.math.Filter;
@@ -12,7 +15,7 @@ import frc.robot.utils.AutoDetectMotorController;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  
+  AHRS gyro;
 
   public static enum DriveType {
     PWM,
@@ -30,6 +33,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     rearRight.setInverted(true);
     frontRight.setInverted(true);
+
+    gyro = new AHRS(SPI.Port.kMXP);
+
+    zeroGyro();
   }
 
   public void arcadeDrive(double forwardSpeed, double turnSpeed) {
@@ -56,8 +63,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     double rightSpeed = Filter.cutoffFilter(left-right);
 
-    SmartDashboard.putNumber("Commanded Velocity Left", leftSpeed * 1000);
-    SmartDashboard.putNumber("Commanded Velocity Right", rightSpeed * 1000);
+    SmartDashboard.putNumber("Commanded Speed Left", leftSpeed);
+    SmartDashboard.putNumber("Commanded Speed Right", rightSpeed);
 
     frontLeft.set(leftSpeed);
     frontRight.set(rightSpeed);
@@ -69,6 +76,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     // followerLeft.set(ControlMode.PercentOutput, leftSpeed);
     // followerRight.set(ControlMode.PercentOutput, rightSpeed);
+  }
+
+  public void zeroGyro() {
+    gyro.reset();
   }
 
   @Override
