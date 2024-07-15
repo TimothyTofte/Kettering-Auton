@@ -16,7 +16,6 @@ public class Shape extends SequentialCommandGroup {
   public Shape(DriveSubsystem driveSubsystem, int sides, boolean curve) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    // 0.506
     addCommands(
       new TankDrive(driveSubsystem, () -> 0.5, () -> 0).withTimeout(0.5)
     );

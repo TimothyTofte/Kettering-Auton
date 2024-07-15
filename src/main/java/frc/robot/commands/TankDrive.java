@@ -21,7 +21,6 @@ public class TankDrive extends CommandBase {
     this.driveSubsystem = driveSubsystem;
     this.left = left;
     this.right = right;
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

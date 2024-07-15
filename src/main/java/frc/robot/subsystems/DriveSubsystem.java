@@ -15,7 +15,7 @@ import frc.robot.utils.AutoDetectMotorController;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  AHRS gyro;
+  private AHRS gyro;
 
   public static enum DriveType {
     PWM,
@@ -37,22 +37,6 @@ public class DriveSubsystem extends SubsystemBase {
     gyro = new AHRS(SPI.Port.kMXP);
 
     zeroGyro();
-  }
-
-  public void arcadeDrive(double forwardSpeed, double turnSpeed) {
-    double left = -forwardSpeed + turnSpeed;
-    double right = -forwardSpeed - turnSpeed;
-    rearRight.set(right);
-    frontRight.set(right);
-    rearLeft.set(left);
-    frontLeft.set(left);
-  }
-
-  public void tankDrive(double leftSpeed, double rightSpeed) {
-    rearRight.set(rightSpeed);
-    frontRight.set(rightSpeed);
-    rearLeft.set(leftSpeed);
-    frontLeft.set(leftSpeed);
   }
 
   public void drive(double left, double right) {
@@ -82,8 +66,13 @@ public class DriveSubsystem extends SubsystemBase {
     gyro.reset();
   }
 
+  public double getGyroYaw() {
+    return gyro.getYaw();
+  }
+
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
   }
 
   @Override
