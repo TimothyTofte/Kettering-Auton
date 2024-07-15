@@ -9,7 +9,6 @@ import frc.robot.Constants.AvalDriveModes;
 import frc.robot.subsystems.DriveSubsystem;
 
 import java.util.Map;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Joystick;
@@ -17,13 +16,13 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class DriveCommand extends Command {
+public class DriveCommand extends CommandBase {
 
-  private final DriveSubsystem drive;
-  private final DoubleSupplier leftSpeed, rightSpeed;
+  private final DriveSubsystem m_subsystem;
+  private final Joystick m_js0, m_js1;
 
   private SendableChooser<Constants.AvalDriveModes> drivetrainType = new SendableChooser<Constants.AvalDriveModes>();
   private GenericEntry reverseDrivetrain, maxDriveSpeed;
@@ -32,17 +31,16 @@ public class DriveCommand extends Command {
   /**
    * Creates a new ExampleCommand.
    *
-   * @param drive The subsystem used by this command.
+   * @param subsystem The subsystem used by this command.
    */
-  public DriveCommand(DriveSubsystem drive, DoubleSupplier leftSpeed, DoubleSupplier rightSpeed) {
+  public DriveCommand(DriveSubsystem subsystem, Joystick js_0, Joystick js_1) {
     // Set class globals
-    this.drive = drive;
-    this.leftSpeed = leftSpeed;
-    this.rightSpeed = rightSpeed;
-    
+    m_subsystem = subsystem;
+    m_js0 = js_0;
+    m_js1 = js_1;
 
     // Require subsystems
-    addRequirements(drive);
+    addRequirements(subsystem);
 
     // Get Suffleboard tab
     tab = Shuffleboard.getTab("Drivetrain");
@@ -103,7 +101,7 @@ public class DriveCommand extends Command {
     boolean teamworkMode = dMode == AvalDriveModes.TeamworkArcade || dMode == AvalDriveModes.TeamworkTank;
 
     // If we're in teamwork mode, the second stick is actually JS_1
-    // Joystick secondStick = teamworkMode ? m_js1 : m_js0;
+    Joystick secondStick = teamworkMode ? m_js1 : m_js0;
 
     // If we're not in tank mode
     if(dMode != AvalDriveModes.Tank && dMode != AvalDriveModes.TeamworkTank) {
@@ -115,22 +113,22 @@ public class DriveCommand extends Command {
         (dMode == AvalDriveModes.ArcadeLeft) ? Constants.LEFT_Y : Constants.RIGHT_Y;
 
       // Read Axis
-      double xVal = rightSpeed.getAsDouble() * maxSpeed;
-      double yVal = leftSpeed.getAsDouble() * maxSpeed;
+      double xVal = m_js0.getRawAxis(xStick) * maxSpeed;
+      double yVal = secondStick.getRawAxis(yStick) * maxSpeed;
 
       if (!doReverse) {
         yVal = -yVal;
       }
 
-      drive.arcadeDrive(yVal * .75, xVal * .75);
+      m_subsystem.arcadeDrive(yVal * .75, xVal * .75);
     } else {
-      double lStick = leftSpeed.getAsDouble() * maxSpeed;
-      double rStick = rightSpeed.getAsDouble() * maxSpeed;
+      double lStick = m_js0.getRawAxis(Constants.LEFT_Y) * maxSpeed;
+      double rStick = secondStick.getRawAxis(Constants.RIGHT_Y) * maxSpeed;
 
       if(doReverse) {
-        drive.tankDrive(lStick * -.75, rStick * -.75);
+        m_subsystem.tankDrive(lStick * -.75, rStick * -.75);
       } else {
-        drive.tankDrive(rStick * .75, lStick * .75);
+        m_subsystem.tankDrive(rStick * .75, lStick * .75);
       }
     }
   }

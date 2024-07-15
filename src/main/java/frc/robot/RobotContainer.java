@@ -13,6 +13,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.AvalButtons;
 import frc.robot.Constants.AvalDriveModes;
+import frc.robot.autos.Task2;
+import frc.robot.autos.Task3;
+import frc.robot.autos.Task4;
+import frc.robot.autos.Task5;
+import frc.robot.autos.Shape;
 import frc.robot.autos.TestAuto;
 import frc.robot.commands.AuxCommand;
 import frc.robot.commands.DriveCommand;
@@ -20,7 +25,6 @@ import frc.robot.subsystems.AuxSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -41,7 +45,6 @@ public class RobotContainer {
   // Joystick
   private final Joystick m_stick0 = new Joystick(0);
   private final Joystick m_stick1 = new Joystick(1);
-  private final int leftJoystick = XboxController.Axis.kLeftY.value;
 
   // Default Commands
   private final DriveCommand m_driveCommand = new DriveCommand(m_driveSubsystem, m_stick0, m_stick1);
@@ -204,6 +207,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    // return new TestAuto(m_driveSubsystem);
+    // return new Task2(m_driveSubsystem);
+    // return new Task3(m_driveSubsystem);
+    // return new Task4(m_driveSubsystem);
+    // return new Task5(m_driveSubsystem);
+    return new Shape(m_driveSubsystem, 6, true);
   }
 }

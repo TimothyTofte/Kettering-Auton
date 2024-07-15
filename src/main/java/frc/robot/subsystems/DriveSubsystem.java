@@ -4,11 +4,15 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.math.Filter;
 import frc.robot.Constants;
 import frc.robot.utils.AutoDetectMotorController;
 
 public class DriveSubsystem extends SubsystemBase {
+
+  
 
   public static enum DriveType {
     PWM,
@@ -42,6 +46,29 @@ public class DriveSubsystem extends SubsystemBase {
     frontRight.set(rightSpeed);
     rearLeft.set(leftSpeed);
     frontLeft.set(leftSpeed);
+  }
+
+  public void drive(double left, double right) {
+    left = Filter.deadband(left, 0.05);
+    right = Filter.deadband(right, 0.05);
+
+    double leftSpeed = Filter.cutoffFilter(left+right);
+
+    double rightSpeed = Filter.cutoffFilter(left-right);
+
+    SmartDashboard.putNumber("Commanded Velocity Left", leftSpeed * 1000);
+    SmartDashboard.putNumber("Commanded Velocity Right", rightSpeed * 1000);
+
+    frontLeft.set(leftSpeed);
+    frontRight.set(rightSpeed);
+
+    // driveLeft.set(ControlMode.PercentOutput, leftSpeed * 1.25);
+    // driveRight.set(ControlMode.PercentOutput, rightSpeed);
+    rearLeft.set(leftSpeed);
+    rearRight.set(rightSpeed);
+
+    // followerLeft.set(ControlMode.PercentOutput, leftSpeed);
+    // followerRight.set(ControlMode.PercentOutput, rightSpeed);
   }
 
   @Override

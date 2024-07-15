@@ -12,12 +12,12 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AvalButtons;
 import frc.robot.subsystems.AuxSubsystem;
 
-public class AuxCommand extends Command {
+public class AuxCommand extends CommandBase {
   private AuxSubsystem aux;
   private Joystick js0, js1;
   private String tabName;

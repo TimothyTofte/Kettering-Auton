@@ -11,15 +11,16 @@ import frc.robot.subsystems.DriveSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TestAuto extends SequentialCommandGroup {
-  /** Creates a new TestAuto. */
-  public TestAuto(DriveSubsystem drive) {
+public class Task2 extends SequentialCommandGroup {
+  /** Creates a new Task2. */
+  public Task2(DriveSubsystem driveSubsystem) {
     // Add your commands in the addCommands() call, e.g.
-    drive.tankDrive(0, 0);
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new TankDrive(drive, () -> 0.2, () -> 0).withTimeout(2),
-      new TankDrive(drive, () -> 0, () -> 0)
+      new TankDrive(driveSubsystem, () -> 0.2, () -> 0).withTimeout(1),
+      new TankDrive(driveSubsystem, () -> 0, () -> 0.5).withTimeout(0.76),
+      new TankDrive(driveSubsystem, () -> 0.2, () -> 0).withTimeout(1),
+      new TankDrive(driveSubsystem, () -> 0, () -> 0)
     );
   }
 }
