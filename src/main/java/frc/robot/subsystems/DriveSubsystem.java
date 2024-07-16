@@ -40,6 +40,10 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drive(double left, double right) {
+    left *= Constants.maxSpeed;
+    right *= Constants.maxSpeed;
+    SmartDashboard.putNumber("Unfiltered Right", right);
+    SmartDashboard.putNumber("Unfiltered Left", left);
     left = Filter.deadband(left, 0.05);
     right = Filter.deadband(right, 0.05);
 
@@ -67,13 +71,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getGyroYaw() {
-    return gyro.getYaw();
+    return gyro.getYaw() > 180 ? gyro.getYaw() - 360 : gyro.getYaw();
   }
 
   @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
-  }
+  public void periodic() {}
 
   @Override
   public void simulationPeriodic() {

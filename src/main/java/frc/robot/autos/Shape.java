@@ -17,7 +17,7 @@ public class Shape extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new TankDrive(driveSubsystem, () -> 0.5, () -> 0).withTimeout(0.5)
+      new TankDrive(driveSubsystem, () -> 0.3, () -> 0).withTimeout(0.3)
     );
     // Setting the value to 1 outputs the correct number of sides because of how this is written
     if (curve) {
@@ -40,7 +40,7 @@ public class Shape extends SequentialCommandGroup {
     double time = 3.04 / sides;
     addCommands(
       new TankDrive(driveSubsystem, () -> 0, () -> 0.5).withTimeout(time),
-      new TankDrive(driveSubsystem, () -> 0.5, () -> 0).withTimeout(0.3)
+      new TankDrive(driveSubsystem, () -> 0.3, () -> 0).withTimeout(0.3)
     );
   }
 

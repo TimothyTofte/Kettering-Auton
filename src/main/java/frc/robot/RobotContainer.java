@@ -4,14 +4,23 @@
 
 package frc.robot;
 
+import java.lang.constant.DirectMethodHandleDesc;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.autos.Shape;
+import frc.robot.autos.Task2;
+import frc.robot.autos.GyroAutos.DriveStraight;
+import frc.robot.autos.GyroAutos.SmartShape;
 import frc.robot.commands.TankDrive;
+import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.math.Filter;
 
 /**
@@ -25,11 +34,15 @@ import frc.lib.math.Filter;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  public final DriveSubsystem driveSubsystem = new DriveSubsystem();
 
   // Joystick
-  private final Joystick m_stick0 = new Joystick(0);
-
+  private final Joystick controller0 = new Joystick(0);
+  private final JoystickButton yButton = new JoystickButton(controller0, XboxController.Button.kY.value);
+  private final POVButton dpadUp = new POVButton(controller0, 0);
+  private final POVButton dpadDown = new POVButton(controller0, 180);
+  private final POVButton dpadLeft = new POVButton(controller0, 90);
+  private final POVButton dpadRight = new POVButton(controller0, 270);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -44,11 +57,10 @@ public class RobotContainer {
 
   // Set Subsystem Default Commands
   public void setDefaultCommands() {
-    m_driveSubsystem.setDefaultCommand(new TankDrive(
-      m_driveSubsystem,
-      () -> m_stick0.getRawAxis(XboxController.Axis.kLeftY.value),
-      () -> Filter.powerCurve(m_stick0.getRawAxis(XboxController.Axis.kRightX.value), 3)
-    ));
+    driveSubsystem.setDefaultCommand(new TankDrive(
+        driveSubsystem,
+        () -> -controller0.getRawAxis(XboxController.Axis.kLeftY.value),
+        () -> Filter.powerCurve(controller0.getRawAxis(XboxController.Axis.kRightX.value), 3)));
   }
 
   /**
@@ -60,12 +72,17 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
+    yButton.onTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
+    dpadUp.whileTrue(new TurnToAngle(driveSubsystem, () -> 0));
+    dpadDown.whileTrue(new TurnToAngle(driveSubsystem, () -> 178));
+    dpadLeft.whileTrue(new TurnToAngle(driveSubsystem, () -> -90));
+    dpadRight.whileTrue(new TurnToAngle(driveSubsystem, () -> 90));
   }
 
   public void diagnostics() {
-    SmartDashboard.putNumber("LeftY", m_stick0.getRawAxis(XboxController.Axis.kLeftY.value));
-    SmartDashboard.putNumber("RightY", m_stick0.getRawAxis(XboxController.Axis.kRightX.value));
+    SmartDashboard.putNumber("LeftY", controller0.getRawAxis(XboxController.Axis.kLeftY.value));
+    SmartDashboard.putNumber("RightY", controller0.getRawAxis(XboxController.Axis.kRightX.value));
+    SmartDashboard.putNumber("Gyro", driveSubsystem.getGyroYaw());
   }
 
   /**
@@ -74,12 +91,14 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
+    driveSubsystem.zeroGyro();
     // return new TestAuto(m_driveSubsystem);
-    // return new Task2(m_driveSubsystem);
+    // return new Task2(driveSubsystem);
     // return new Task3(m_driveSubsystem);
     // return new Task4(m_driveSubsystem);
     // return new Task5(m_driveSubsystem);
-    return new Shape(m_driveSubsystem, 6, true);
+    // return new Shape(driveSubsystem, 6, false);
+    // return new SmartShape(driveSubsystem, 4);
+    return new DriveStraight(driveSubsystem, 5);
   }
 }
