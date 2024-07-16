@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.lang.constant.DirectMethodHandleDesc;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -60,7 +61,8 @@ public class RobotContainer {
     driveSubsystem.setDefaultCommand(new TankDrive(
         driveSubsystem,
         () -> -controller0.getRawAxis(XboxController.Axis.kLeftY.value),
-        () -> Filter.powerCurve(controller0.getRawAxis(XboxController.Axis.kRightX.value), 3)));
+        () -> 0));
+    // driveSubsystem.setDefaultCommand(new TurnToAngle(driveSubsystem, () -> Rotation2d.fromRadians(Math.atan2(Filter.deadband(controller0.getRawAxis(XboxController.Axis.kRightY.value), 0.1), Filter.deadband(controller0.getRawAxis(XboxController.Axis.kRightX.value), 0.1))).getDegrees(), () -> controller0.getRawAxis(XboxController.Axis.kLeftY.value)));
   }
 
   /**
@@ -74,9 +76,9 @@ public class RobotContainer {
   private void configureButtonBindings() {
     yButton.onTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     dpadUp.whileTrue(new TurnToAngle(driveSubsystem, () -> 0));
-    dpadDown.whileTrue(new TurnToAngle(driveSubsystem, () -> 178));
-    dpadLeft.whileTrue(new TurnToAngle(driveSubsystem, () -> -90));
-    dpadRight.whileTrue(new TurnToAngle(driveSubsystem, () -> 90));
+    dpadDown.whileTrue(new TurnToAngle(driveSubsystem, () -> 180));
+    dpadLeft.whileTrue(new TurnToAngle(driveSubsystem, () -> 90));
+    dpadRight.whileTrue(new TurnToAngle(driveSubsystem, () -> -90));
   }
 
   public void diagnostics() {
@@ -98,7 +100,7 @@ public class RobotContainer {
     // return new Task4(m_driveSubsystem);
     // return new Task5(m_driveSubsystem);
     // return new Shape(driveSubsystem, 6, false);
-    // return new SmartShape(driveSubsystem, 4);
-    return new DriveStraight(driveSubsystem, 5);
+    return new SmartShape(driveSubsystem, 4);
+    // return new DriveStraight(driveSubsystem, 5);
   }
 }

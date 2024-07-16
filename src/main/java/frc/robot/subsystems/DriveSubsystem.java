@@ -71,7 +71,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getGyroYaw() {
-    return gyro.getYaw() > 180 ? gyro.getYaw() - 360 : gyro.getYaw();
+    // return gyro.getYaw() < 0 ? gyro.getYaw() + 360 : gyro.getYaw();
+    return gyro.getYaw();
   }
 
   @Override
