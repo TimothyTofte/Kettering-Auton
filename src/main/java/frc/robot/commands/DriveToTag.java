@@ -29,7 +29,7 @@ public class DriveToTag extends Command {
   public void execute() {
     if (photonVision.getDistance() >= 2) {
       System.out.println("Driving");
-      driveSubsystem.drive(-0.5, 0);
+      driveSubsystem.drive(-0.2, 0);
     }
   }
 
