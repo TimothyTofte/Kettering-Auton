@@ -30,11 +30,6 @@ public class DriveToTag extends Command {
     if (photonVision.getDistance() >= 2) {
       System.out.println("Driving");
       driveSubsystem.drive(-0.5, 0);
-    } else if (photonVision.getDistance() < 2) {
-      return;
-    } else {
-      System.out.println("Not Driving");
-      driveSubsystem.drive(0, 0);
     }
   }
 
