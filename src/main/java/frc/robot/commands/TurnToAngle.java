@@ -7,10 +7,10 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class TurnToAngle extends CommandBase {
+public class TurnToAngle extends Command {
   DriveSubsystem driveSubsystem;
   DoubleSupplier angle;
   DoubleSupplier speed = () -> 0;
@@ -36,7 +36,7 @@ public class TurnToAngle extends CommandBase {
   @Override
   public void execute() {
     SmartDashboard.putNumber("Commanded Angle", angle.getAsDouble());
-    driveSubsystem.drive(speed.getAsDouble(), -(driveSubsystem.getGyroYaw() - angle.getAsDouble()) / 45);
+    driveSubsystem.drive(speed.getAsDouble(), -(driveSubsystem.getGyroYaw() - angle.getAsDouble()) / 10);
   }
 
   // Called once the command ends or is interrupted.
