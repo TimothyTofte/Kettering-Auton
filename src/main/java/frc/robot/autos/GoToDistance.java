@@ -18,10 +18,10 @@ public class GoToDistance extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
       addCommands(
-        new AutoTank(driveSubsystem, () -> 0.2, () -> 0)
+        new AutoTank(driveSubsystem, () -> 1, () -> 0)
       );
       
-      if (photonVision.getDistance() < 2) {
+      if (photonVision.getDistance() < 4) {
         addCommands(
           new AutoTank(driveSubsystem, () -> 0, () -> 0)
         );

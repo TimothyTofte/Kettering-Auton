@@ -18,6 +18,9 @@ import frc.robot.autos.Task2;
 import frc.robot.autos.GyroAutos.DriveStraight;
 import frc.robot.autos.GyroAutos.SmartShape;
 import frc.robot.commands.DriveToTag;
+import frc.robot.commands.MaintainAll;
+import frc.robot.commands.MaintainDistance;
+import frc.robot.commands.MaintainYaw;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.DriveSubsystem;
@@ -46,6 +49,8 @@ public class RobotContainer {
   private final Joystick controller0 = new Joystick(0);
   private final JoystickButton yButton = new JoystickButton(controller0, XboxController.Button.kY.value);
   private final JoystickButton aButton = new JoystickButton(controller0, XboxController.Button.kA.value);
+  private final JoystickButton bButton = new JoystickButton(controller0, XboxController.Button.kB.value);
+  private final JoystickButton xButton = new JoystickButton(controller0, XboxController.Button.kX.value);
   private final POVButton dpadUp = new POVButton(controller0, 0);
   private final POVButton dpadDown = new POVButton(controller0, 180);
   private final POVButton dpadLeft = new POVButton(controller0, 90);
@@ -66,7 +71,7 @@ public class RobotContainer {
   public void setDefaultCommands() {
     driveSubsystem.setDefaultCommand(new TankDrive(
         driveSubsystem,
-        () -> -controller0.getRawAxis(XboxController.Axis.kLeftY.value),
+        () -> controller0.getRawAxis(XboxController.Axis.kLeftY.value),
         () -> Filter.powerCurve(controller0.getRawAxis(XboxController.Axis.kRightX.value), 3)));
     // driveSubsystem.setDefaultCommand(new TurnToAngle(driveSubsystem, () -> Rotation2d.fromRadians(Math.atan2(Filter.deadband(controller0.getRawAxis(XboxController.Axis.kRightY.value), 0.1), Filter.deadband(controller0.getRawAxis(XboxController.Axis.kRightX.value), 0.1))).getDegrees(), () -> controller0.getRawAxis(XboxController.Axis.kLeftY.value)));
   }
@@ -85,8 +90,10 @@ public class RobotContainer {
     dpadDown.whileTrue(new TurnToAngle(driveSubsystem, () -> 180));
     dpadLeft.whileTrue(new TurnToAngle(driveSubsystem, () -> 90));
     dpadRight.whileTrue(new TurnToAngle(driveSubsystem, () -> -90));
+    bButton.whileTrue(new MaintainDistance(photonVision, driveSubsystem));
     // aButton.whileTrue(new TurnToAngle(driveSubsystem, () -> photonVision.getYaw()));
-    aButton.whileTrue(new DriveToTag(driveSubsystem, photonVision));
+    aButton.whileTrue(new MaintainYaw(photonVision, driveSubsystem));
+    xButton.whileTrue(new MaintainAll(photonVision, driveSubsystem));
   }
 
   public void diagnostics() {
@@ -114,7 +121,8 @@ public class RobotContainer {
     // return new Shape(driveSubsystem, 6, false);
     // return new SmartShape(driveSubsystem, 4);
     // return new GoToDistance(driveSubsystem, photonVision);
-    return new DriveToTag(driveSubsystem, photonVision);
+    // return new DriveToTag(driveSubsystem, photonVision);
+    return new MaintainAll(photonVision, driveSubsystem);
     // return new DriveStraight(driveSubsystem, 5);
   }
 }
