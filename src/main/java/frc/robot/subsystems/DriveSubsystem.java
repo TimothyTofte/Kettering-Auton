@@ -39,31 +39,28 @@ public class DriveSubsystem extends SubsystemBase {
     zeroGyro();
   }
 
-  public void drive(double left, double right) {
-    left *= Constants.maxSpeed;
-    right *= Constants.maxSpeed;
-    SmartDashboard.putNumber("Unfiltered Right", right);
-    SmartDashboard.putNumber("Unfiltered Left", left);
-    left = Filter.deadband(left, 0.05);
-    right = Filter.deadband(right, 0.05);
+  public void drive(double speed, double rotation) {
+    speed *= Constants.maxSpeed;
+    rotation *= Constants.maxSpeed;
+    SmartDashboard.putNumber("Unfiltered Right", rotation);
+    SmartDashboard.putNumber("Unfiltered Left", speed);
+    speed = Filter.deadband(speed, 0.05);
+    rotation = Filter.deadband(rotation, 0.05);
 
-    double leftSpeed = Filter.cutoffFilter(left+right);
+    // This doesn't allow the values to exceed 1 or -1
+    speed = Filter.cutoffFilter(speed+rotation);
 
-    double rightSpeed = Filter.cutoffFilter(left-right);
+    rotation = Filter.cutoffFilter(speed-rotation);
 
-    SmartDashboard.putNumber("Commanded Speed Left", leftSpeed);
-    SmartDashboard.putNumber("Commanded Speed Right", rightSpeed);
+    // This is just some output stuff for my sanity
+    SmartDashboard.putNumber("Commanded Speed Left", speed);
+    SmartDashboard.putNumber("Commanded Speed Right", rotation);
 
-    frontLeft.set(leftSpeed);
-    frontRight.set(rightSpeed);
+    frontLeft.set(speed);
+    frontRight.set(rotation);
 
-    // driveLeft.set(ControlMode.PercentOutput, leftSpeed * 1.25);
-    // driveRight.set(ControlMode.PercentOutput, rightSpeed);
-    rearLeft.set(leftSpeed);
-    rearRight.set(rightSpeed);
-
-    // followerLeft.set(ControlMode.PercentOutput, leftSpeed);
-    // followerRight.set(ControlMode.PercentOutput, rightSpeed);
+    rearLeft.set(speed);
+    rearRight.set(rotation);
   }
 
   public void zeroGyro() {
@@ -71,7 +68,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getGyroYaw() {
-    // return gyro.getYaw() < 0 ? gyro.getYaw() + 360 : gyro.getYaw();
     return gyro.getYaw();
   }
 

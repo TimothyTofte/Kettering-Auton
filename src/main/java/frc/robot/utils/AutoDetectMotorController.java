@@ -23,9 +23,9 @@ public class AutoDetectMotorController {
     }
 
     private PWMVictorSPX pwm;
-    private TalonSRX talonSrx;
+    private TalonSRX talonSRX;
     private CANSparkMax sparkMax;
-    private VictorSPX victorSpx;
+    private VictorSPX victorSPX;
 
     private ControllerType type = ControllerType.PWM;
 
@@ -33,28 +33,28 @@ public class AutoDetectMotorController {
         // Iterate over each motor controller and find the active one
 
         // Try TalonSRX
-        talonSrx = new TalonSRX(id + 1); // All CAN addresses are off by one
-        if (talonSrx.getFirmwareVersion() != -1) {
+        talonSRX = new TalonSRX(id + 1); // All CAN addresses are off by one
+        if (talonSRX.getFirmwareVersion() != -1) {
             type = ControllerType.CANTalonSRX;
-            System.out.println("Found TalonSRX for ID #" + id  + " with FW Version " + talonSrx.getFirmwareVersion());
+            System.out.println("Found TalonSRX for ID #" + id  + " with FW Version " + talonSRX.getFirmwareVersion());
             return;
         }
 
         // Not talon, close and move on
-        talonSrx.DestroyObject();
-        talonSrx = null;
+        talonSRX.DestroyObject();
+        talonSRX = null;
 
         // Try Victor SPX
-        victorSpx = new VictorSPX(id + 1); // All CAN Addresses are off by one
-        if (victorSpx.getFirmwareVersion() != -1) {
+        victorSPX = new VictorSPX(id + 1); // All CAN Addresses are off by one
+        if (victorSPX.getFirmwareVersion() != -1) {
             type = ControllerType.CANVictorSPX;
-            System.out.println("Found VictorSPX for ID #" + id  + " with FW Version " + victorSpx.getFirmwareVersion() );
+            System.out.println("Found VictorSPX for ID #" + id  + " with FW Version " + victorSPX.getFirmwareVersion() );
             return;
         }
 
         // Not victor, close and move on
-        victorSpx.DestroyObject();
-        victorSpx = null;
+        victorSPX.DestroyObject();
+        victorSPX = null;
 
         // Try Spark Max
         sparkMax = new CANSparkMax(id + 1, MotorType.kBrushed); // All CAN Addresses are off by one
@@ -79,10 +79,10 @@ public class AutoDetectMotorController {
             pwm.set(speed);
         } else if (type == ControllerType.CANSparkMax && sparkMax != null) {
             sparkMax.set(speed);
-        } else if (type == ControllerType.CANTalonSRX && talonSrx != null) {
-            talonSrx.set(ControlMode.PercentOutput, speed);
-        } else if (type == ControllerType.CANVictorSPX && victorSpx != null) {
-            victorSpx.set(ControlMode.PercentOutput, speed);
+        } else if (type == ControllerType.CANTalonSRX && talonSRX != null) {
+            talonSRX.set(ControlMode.PercentOutput, speed);
+        } else if (type == ControllerType.CANVictorSPX && victorSPX != null) {
+            victorSPX.set(ControlMode.PercentOutput, speed);
         }
     }
 
@@ -91,10 +91,10 @@ public class AutoDetectMotorController {
             pwm.setInverted(invert);
         } else if (type == ControllerType.CANSparkMax && sparkMax != null) {
             sparkMax.setInverted(invert);
-        } else if (type == ControllerType.CANTalonSRX && talonSrx != null) {
-            talonSrx.setInverted(invert);
-        } else if (type == ControllerType.CANVictorSPX && victorSpx != null) {
-            victorSpx.setInverted(invert);
+        } else if (type == ControllerType.CANTalonSRX && talonSRX != null) {
+            talonSRX.setInverted(invert);
+        } else if (type == ControllerType.CANVictorSPX && victorSPX != null) {
+            victorSPX.setInverted(invert);
         }
     }
 }

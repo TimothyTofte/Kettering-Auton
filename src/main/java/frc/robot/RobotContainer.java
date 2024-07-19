@@ -4,20 +4,10 @@
 
 package frc.robot;
 
-import java.lang.constant.DirectMethodHandleDesc;
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.autos.GoToDistance;
-import frc.robot.autos.GoToTagAngle;
-import frc.robot.autos.Shape;
-import frc.robot.autos.Task2;
-import frc.robot.autos.GyroAutos.DriveStraight;
-import frc.robot.autos.GyroAutos.SmartShape;
-import frc.robot.commands.DriveToTag;
 import frc.robot.commands.MaintainAll;
 import frc.robot.commands.MaintainDistance;
 import frc.robot.commands.MaintainYaw;
@@ -73,7 +63,6 @@ public class RobotContainer {
         driveSubsystem,
         () -> controller0.getRawAxis(XboxController.Axis.kLeftY.value),
         () -> Filter.powerCurve(controller0.getRawAxis(XboxController.Axis.kRightX.value), 3)));
-    // driveSubsystem.setDefaultCommand(new TurnToAngle(driveSubsystem, () -> Rotation2d.fromRadians(Math.atan2(Filter.deadband(controller0.getRawAxis(XboxController.Axis.kRightY.value), 0.1), Filter.deadband(controller0.getRawAxis(XboxController.Axis.kRightX.value), 0.1))).getDegrees(), () -> controller0.getRawAxis(XboxController.Axis.kLeftY.value)));
   }
 
   /**
@@ -91,11 +80,12 @@ public class RobotContainer {
     dpadLeft.whileTrue(new TurnToAngle(driveSubsystem, () -> 90));
     dpadRight.whileTrue(new TurnToAngle(driveSubsystem, () -> -90));
     bButton.whileTrue(new MaintainDistance(photonVision, driveSubsystem));
-    // aButton.whileTrue(new TurnToAngle(driveSubsystem, () -> photonVision.getYaw()));
     aButton.whileTrue(new MaintainYaw(photonVision, driveSubsystem));
+    // This basically runs the a & b command
     xButton.whileTrue(new MaintainAll(photonVision, driveSubsystem));
   }
 
+  // I have this set to run during robot periodic which is helpful for debugging
   public void diagnostics() {
     SmartDashboard.putNumber("LeftY", controller0.getRawAxis(XboxController.Axis.kLeftY.value));
     SmartDashboard.putNumber("RightY", controller0.getRawAxis(XboxController.Axis.kRightX.value));
@@ -113,16 +103,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     driveSubsystem.zeroGyro();
-    // return new TestAuto(m_driveSubsystem);
-    // return new Task2(driveSubsystem);
-    // return new Task3(m_driveSubsystem);
-    // return new Task4(m_driveSubsystem);
-    // return new Task5(m_driveSubsystem);
-    // return new Shape(driveSubsystem, 6, false);
-    // return new SmartShape(driveSubsystem, 4);
-    // return new GoToDistance(driveSubsystem, photonVision);
-    // return new DriveToTag(driveSubsystem, photonVision);
     return new MaintainAll(photonVision, driveSubsystem);
-    // return new DriveStraight(driveSubsystem, 5);
   }
 }

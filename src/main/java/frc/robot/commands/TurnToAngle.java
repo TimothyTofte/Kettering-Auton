@@ -36,7 +36,8 @@ public class TurnToAngle extends Command {
   @Override
   public void execute() {
     SmartDashboard.putNumber("Commanded Angle", angle.getAsDouble());
-    driveSubsystem.drive(speed.getAsDouble(), -(driveSubsystem.getGyroYaw() - angle.getAsDouble()) / 10);
+    // This gets the current angle
+    driveSubsystem.drive(speed.getAsDouble(), -(driveSubsystem.getGyroYaw() - angle.getAsDouble()) / 45);
   }
 
   // Called once the command ends or is interrupted.

@@ -27,6 +27,7 @@ public class DriveToTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // If the tag is more than 4 meters away, go to it (uses 2d april tag)
     if (photonVision.getDistance() >= 4) {
       driveSubsystem.drive(-0.8, 0);
     }
@@ -41,6 +42,7 @@ public class DriveToTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    // Ends the command when it gets close enough
     if (photonVision.getDistance() < 4) {
       driveSubsystem.drive(0.2, 0);
       return true;  

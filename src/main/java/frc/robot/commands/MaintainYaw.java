@@ -13,12 +13,7 @@ public class MaintainYaw extends Command {
   PhotonVision photonVision;
   DriveSubsystem driveSubsystem;
 
-  final double LINEAR_P = 0.1;
-
-  final double LINEAR_D = 0.0;
-
-  PIDController forwardController = new PIDController(LINEAR_P, 0, LINEAR_D);
-
+  // PID Loop for the yaw, wahoo
   final double ANGULAR_P = 0.2;
 
   final double ANGULAR_D = 0.0;
@@ -47,6 +42,7 @@ public class MaintainYaw extends Command {
   public void execute() {
     double yaw = photonVision.getYaw();
 
+    // If the returned yaw is zero, set the speed to zero, it doesn't like 0/10 :(, not wahoo
     rotSpeed = yaw != 0 ? -turnController.calculate(yaw, 0) / 10 : 0;
 
     driveSubsystem.drive(forwardSpeed, rotSpeed);

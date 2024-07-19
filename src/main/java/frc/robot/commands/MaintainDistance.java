@@ -15,6 +15,7 @@ public class MaintainDistance extends Command {
   double forwardSpeed;
   double rotSpeed;
 
+  // PID for the forward speed loop
   final double P_GAIN = 0.5;
   final double D_GAIN = 0;
   PIDController controller = new PIDController(P_GAIN, 0, D_GAIN);
@@ -34,6 +35,7 @@ public class MaintainDistance extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // Gets the range
     double range = photonVision.getDistance();
     
     forwardSpeed = range!= 0 ? controller.calculate(range, 1.5) : 0;
