@@ -20,6 +20,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.math.Filter;
+import frc.robot.commands.SimpleAuto;
+import frc.robot.subsystems.ArmFeedSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -34,6 +37,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final PhotonVision photonVision = new PhotonVision();
+  private final ArmFeedSubsystem armFeed = new ArmFeedSubsystem();
+  private final ShooterSubsystem shooter = new ShooterSubsystem();
 
   // Joystick
   private final Joystick controller0 = new Joystick(0);
@@ -74,7 +79,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    yButton.onTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     dpadUp.whileTrue(new TurnToAngle(driveSubsystem, () -> 0));
     dpadDown.whileTrue(new TurnToAngle(driveSubsystem, () -> 180));
     dpadLeft.whileTrue(new TurnToAngle(driveSubsystem, () -> 90));
@@ -89,7 +93,6 @@ public class RobotContainer {
   public void diagnostics() {
     SmartDashboard.putNumber("LeftY", controller0.getRawAxis(XboxController.Axis.kLeftY.value));
     SmartDashboard.putNumber("RightY", controller0.getRawAxis(XboxController.Axis.kRightX.value));
-    SmartDashboard.putNumber("Gyro", driveSubsystem.getGyroYaw());
     SmartDashboard.putBoolean("Photon Vision", photonVision.hasTarget());
     SmartDashboard.putNumber("Best April Tag ID", photonVision.getBestTargetID());
     SmartDashboard.putNumber("April Tag Yaw", photonVision.getYaw());
@@ -102,7 +105,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    driveSubsystem.zeroGyro();
-    return new MaintainAll(photonVision, driveSubsystem);
+    return new SimpleAuto(driveSubsystem, armFeed, shooter);
   }
 }
