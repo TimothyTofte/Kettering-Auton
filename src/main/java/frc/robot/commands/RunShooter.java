@@ -13,7 +13,7 @@ public class RunShooter extends Command {
     
     @Override
     public void initialize() {
-        shooter.startShooter();
+        shooter.shootBall();
     }
     
     @Override
