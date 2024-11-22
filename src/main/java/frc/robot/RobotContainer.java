@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.MaintainAll;
 import frc.robot.commands.MaintainDistance;
 import frc.robot.commands.MaintainYaw;
+import frc.robot.commands.RunShooter;
+import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.DriveSubsystem;
@@ -50,6 +52,7 @@ public class RobotContainer {
   private final POVButton dpadDown = new POVButton(controller0, 180);
   private final POVButton dpadLeft = new POVButton(controller0, 90);
   private final POVButton dpadRight = new POVButton(controller0, 270);
+  private boolean armPositionUp = false;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -84,13 +87,21 @@ public class RobotContainer {
     dpadLeft.whileTrue(new TurnToAngle(driveSubsystem, () -> 90));
     dpadRight.whileTrue(new TurnToAngle(driveSubsystem, () -> -90));
     bButton.whileTrue(new MaintainDistance(photonVision, driveSubsystem));
-    aButton.whileTrue(new MaintainYaw(photonVision, driveSubsystem));
-    // This basically runs the a & b command
-    xButton.whileTrue(new MaintainAll(photonVision, driveSubsystem));
+    // aButton.whileTrue(new MaintainYaw(photonVision, driveSubsystem));
+    // // This basically runs the a & b command
+    // xButton.whileTrue(new MaintainAll(photonVision, driveSubsystem));
+    xButton.whileTrue(new RunShooter(shooter));
+    yButton.whileTrue(new SetArmPosition(armFeed, true));
+    aButton.whileTrue(new SetArmPosition(armFeed, false));
+    // bButton.whileTrue(new RunShooter(shooter));
   }
 
   // I have this set to run during robot periodic which is helpful for debugging
   public void diagnostics() {
+    SmartDashboard.putNumber("Y Button (Up)", controller0.getRawAxis(XboxController.Button.kY.value));
+    SmartDashboard.putNumber("Arm Servo Angle", armFeed.getPosition());
+    SmartDashboard.putNumber("A Button (Down)", controller0.getRawAxis(XboxController.Button.kA.value));
+    SmartDashboard.putNumber("Shooter", controller0.getRawAxis(XboxController.Button.kX.value));
     SmartDashboard.putNumber("LeftY", controller0.getRawAxis(XboxController.Axis.kLeftY.value));
     SmartDashboard.putNumber("RightY", controller0.getRawAxis(XboxController.Axis.kRightX.value));
     SmartDashboard.putBoolean("Photon Vision", photonVision.hasTarget());
