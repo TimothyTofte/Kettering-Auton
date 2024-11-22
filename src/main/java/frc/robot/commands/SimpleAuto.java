@@ -14,22 +14,22 @@ public class SimpleAuto extends SequentialCommandGroup {
                 new RunShooter(shooter),
                 new SequentialCommandGroup(
                     // Start with arm up
-                    new SetArmPosition(armFeed, true),
+                    new SetArmPosition(armFeed, false),
                     
                     // Drive forward for 5 seconds
-                    new AutoTank(driveSubsystem, () -> 0.5, () -> 0.5)
-                        .withTimeout(5.0),
+                    new AutoTank(driveSubsystem, () -> 0.5, () -> 0)
+                        .withTimeout(3.5),
                     
                     // Turn right for 1 second
-                    new AutoTank(driveSubsystem, () -> 0.5, () -> -0.5)
-                        .withTimeout(1.0),
+                    new AutoTank(driveSubsystem, () -> 0, () -> 0.5)
+                        .withTimeout(1.8),
                     
                     // Drive forward for 3 seconds
-                    new AutoTank(driveSubsystem, () -> 0.5, () -> 0.5)
-                        .withTimeout(3.0),
+                    new AutoTank(driveSubsystem, () -> -0.5, () -> 0)
+                        .withTimeout(1),
                     
                     // Finally, set arm down
-                    new SetArmPosition(armFeed, false)
+                    new SetArmPosition(armFeed, true)
                 )
             )
         );
